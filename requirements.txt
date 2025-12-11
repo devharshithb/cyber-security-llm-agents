@@ -1,7 +1,6 @@
-openai
-langchain-openai
-langchain-experimental
-tiktoken
+# LLM support - AutoGen 0.2.15 handles OpenAI-compatible APIs
+# OpenAI is optional - only needed if using OpenAI backend
+# openai
 
 # PDF handling
 PyPDF2

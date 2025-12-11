@@ -1,5 +1,6 @@
 # cyber-security-llm-agents
-A collection of agents that use Large Language Models (LLMs) to perform tasks common on our day to day jobs in cyber security.
+
+A collection of agents that use Large Language Models (LLMs) to perform tasks common in day-to-day cyber security operations.
 Built on top of [AutoGen](https://microsoft.github.io/autogen/).
 
 Released as part of our talks at RSAC2024:  
@@ -16,41 +17,87 @@ Released as part of our talks at RSAC2024:
 - **Modular Design**: Our framework is composed of individual agents and tasks that can be combined and customized to fit your specific security needs. This modular approach ensures flexibility and scalability, allowing you to adapt to the ever-evolving landscape of cyber threats.
 - **Automation**: With Cyber-Security-LLM-Agents, you can automate repetitive and complex tasks, freeing up valuable time for your security team to focus on strategic analysis and decision-making.
 - **Batteries Included**: We provide a comprehensive set of pre-defined workflows, agents, and tasks that are ready to use out-of-the-box. This enables you to jumpstart your cyber security automation with proven practices and techniques.
+- **Flexible LLM Backends**: Support for multiple LLM providers including local (Ollama), cloud (OpenAI, Groq), allowing you to choose based on your privacy, cost, and performance requirements.
 
 ## Getting Started
 
 > [!CAUTION]
 > Running LLM-generated source code and commands poses a security risk to your host environment! Be careful and only run this in a virtual or test environment.
 
-### Step 1 - Install  requirements
+### Step 1 - Install Requirements
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### Step 2 - Configure OpenAI API Information
+### Step 2 - Configure LLM Backend
 
+The framework supports three LLM backends:
+
+#### Option A: Ollama (Recommended - Free & Local)
+
+**No API keys required!** Runs completely on your machine.
+
+1. Install Ollama from [https://ollama.ai](https://ollama.ai)
+
+2. Pull a model (we recommend llama2 or mistral):
+```bash
+ollama pull llama2
+# or
+ollama pull mistral
+```
+
+3. Ensure Ollama is running:
+```bash
+ollama serve
+```
+
+4. Create your `.env` file:
 ```bash
 cp .env_template .env
 ```
-Then edit the `.env` file and add your OpenAI API key:
+
+The default configuration in `.env_template` is already set for Ollama, so no changes needed!
 
 ```bash
-# Required - Edit these values
-OPENAI_API_KEY="sk-your-actual-api-key-here"
-OPENAI_MODEL_NAME="gpt-3.5-turbo-0125"  # or gpt-4, gpt-4-turbo, etc.
-
-# Optional - Only needed for Caldera integration
-CALDERA_SERVER="http://<caldera-hostname>:8888"
-CALDERA_API_KEY="<your-caldera-api-key>"
-
-# Optional - Only needed for HTTP/FTP servers
-WEB_SERVER_PORT=8800
-FTP_SERVER_ADDRESS="192.168.162.11:2100"
-FTP_SERVER_USER="user"
-FTP_SERVER_PASS="12345"
+LLM_BACKEND=ollama
+OLLAMA_BASE_URL=http://localhost:11434
+OLLAMA_MODEL=llama2
 ```
 
+#### Option B: Groq (Free Tier with API Key)
+
+Groq offers fast inference with a generous free tier.
+
+1. Get a free API key from [https://console.groq.com](https://console.groq.com)
+
+2. Create your `.env` file:
+```bash
+cp .env_template .env
+```
+
+3. Edit `.env` and configure:
+```bash
+LLM_BACKEND=groq
+GROQ_API_KEY=your-groq-api-key-here
+GROQ_MODEL=llama3-8b-8192
+```
+
+#### Option C: OpenAI (Requires Paid API Key)
+
+1. Get an API key from [https://platform.openai.com](https://platform.openai.com)
+
+2. Create your `.env` file:
+```bash
+cp .env_template .env
+```
+
+3. Edit `.env` and configure:
+```bash
+LLM_BACKEND=openai
+OPENAI_API_KEY=sk-your-actual-api-key-here
+OPENAI_MODEL_NAME=gpt-3.5-turbo
+```
 
 ### Step 3 - Run the Agents
 
@@ -80,7 +127,7 @@ Available scenarios include:
 - And many more (see interactive menu)
 
 
-### Step 4 - Start HTTP and FTP server (Optional)
+### Step 4 - Start HTTP and FTP Server (Optional)
 
 Only required if you want to host a simple HTTP and FTP server to interact with using your agents.
 This is useful for demos, where you might want to showcase exfiltration or downloading of payloads onto an implant.
@@ -92,7 +139,19 @@ python run_servers.py
 
 ## Quick Start Example
 
-After setup, test with:
+After setup, verify your configuration:
+
+```bash
+python test_configuration.py
+```
+
+This will verify that:
+- All modules import correctly
+- Your LLM backend is configured properly
+- All agents can be retrieved
+- Configuration validation works
+
+Then test with a simple scenario:
 
 ```bash
 python run_agents.py HELLO_AGENTS
@@ -177,25 +236,70 @@ The framework includes specialized agents:
 
 ## Development
 
+### Testing
 
-### Jupyter notebooks
+Test your configuration:
 
-You can launch jupyter notebooks on your network interface by choice. This allows you run the notebooks within a VM and expose them to different system - interesting for demos!
-
+```bash
+python test_configuration.py
 ```
+
+Verify all scenarios are defined correctly:
+
+```bash
+python verify_scenarios.py
+```
+
+### Jupyter Notebooks
+
+You can launch jupyter notebooks on your network interface by choice. This allows you to run the notebooks within a VM and expose them to different system - interesting for demos!
+
+```bash
 ./run_notebooks.sh ens37
 ```
 
-### Static analysis and code quality
+### Static Analysis and Code Quality
 
 We ignore E501 (line too long) as this triggers on long agent and action strings.
 We ignore W503 (line break before binary operator) and we are opinionated about this being OK.
 
-```
+```bash
 flake8 --exclude=.venv --ignore=E501,W503 .
 ```
 
-## Conributions
+## Troubleshooting
+
+### Ollama Connection Issues
+
+If you get connection errors with Ollama:
+
+1. Ensure Ollama is running:
+```bash
+ollama serve
+```
+
+2. Verify the model is pulled:
+```bash
+ollama list
+```
+
+3. Test the connection:
+```bash
+curl http://localhost:11434/api/generate -d '{"model": "llama2", "prompt": "Hello"}'
+```
+
+### Missing Dependencies
+
+If you get module errors:
+```bash
+pip install -r requirements.txt
+```
+
+### Configuration Errors
+
+The framework will validate your configuration on startup and provide helpful error messages if something is misconfigured.
+
+## Contributions
 
 We welcome contributions from the community! 
 
@@ -212,6 +316,5 @@ Please note that the software contained in this repository is in its early stage
 We are committed to improving and extending the software's capabilities over the coming months, and we welcome any feedback that can help us enhance its performance and functionality.
 
 ## Acknowledgements
-We are grateful for the support received by 
-[INNOVIRIS](https://innoviris.brussels/) and the Brussels region in 
-funding our Research & Development activities. 
+
+We are grateful for the support received by [INNOVIRIS](https://innoviris.brussels/) and the Brussels region in funding our Research & Development activities.

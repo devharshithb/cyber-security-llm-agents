@@ -5,11 +5,77 @@ import os
 # Get path to the script folder
 script_folder = os.path.dirname(os.path.abspath(__file__))
 working_folder = os.path.join(script_folder, "../" + utils.constants.LLM_WORKING_FOLDER)
-llm_config = {
-    "model": utils.constants.OPENAI_MODEL_NAME,
-    "api_key": utils.constants.OPENAI_API_KEY,
-    "cache_seed": None,
-}
+
+
+def get_llm_config():
+    """
+    Get the LLM configuration based on the selected backend.
+    Supports: ollama (local, free), openai (requires API key), groq (free tier with API key)
+    """
+    backend = utils.constants.LLM_BACKEND.lower()
+
+    if backend == "ollama":
+        # Ollama configuration using OpenAI-compatible endpoint
+        # Note: Ollama uses /v1 suffix for OpenAI compatibility
+        base_url = utils.constants.OLLAMA_BASE_URL
+        if not base_url.endswith("/v1"):
+            base_url = base_url.rstrip("/") + "/v1"
+
+        return {
+            "config_list": [
+                {
+                    "model": utils.constants.OLLAMA_MODEL,
+                    "base_url": base_url,
+                    "api_key": "ollama",  # Ollama doesn't require real API key, but OpenAI client needs something
+                }
+            ],
+            "cache_seed": None,
+        }
+
+    elif backend == "openai":
+        # OpenAI configuration - using config_list for consistency
+        return {
+            "config_list": [
+                {
+                    "model": utils.constants.OPENAI_MODEL_NAME,
+                    "api_key": utils.constants.OPENAI_API_KEY,
+                }
+            ],
+            "cache_seed": None,
+        }
+
+    elif backend == "groq":
+        # Groq configuration (OpenAI-compatible)
+        return {
+            "config_list": [
+                {
+                    "model": utils.constants.GROQ_MODEL,
+                    "api_key": utils.constants.GROQ_API_KEY,
+                    "base_url": "https://api.groq.com/openai/v1",
+                }
+            ],
+            "cache_seed": None,
+        }
+
+    else:
+        raise ValueError(f"Unsupported LLM backend: {backend}")
+
+
+# Lazy initialization of llm_config - will be created when first accessed
+_llm_config = None
+
+
+def get_config():
+    """Get the LLM configuration with lazy initialization."""
+    global _llm_config
+    if _llm_config is None:
+        _llm_config = get_llm_config()
+    return _llm_config
+
+
+# For backward compatibility, create llm_config as a module-level variable
+# This will be initialized on first import
+llm_config = get_llm_config()
 
 
 def clean_working_directory(agent_subfolder: str):
