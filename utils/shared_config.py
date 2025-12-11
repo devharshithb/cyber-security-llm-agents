@@ -15,13 +15,18 @@ def get_llm_config():
     backend = utils.constants.LLM_BACKEND.lower()
     
     if backend == "ollama":
-        # Ollama configuration using litellm
+        # Ollama configuration using OpenAI-compatible endpoint
+        # Note: Ollama uses /v1 suffix for OpenAI compatibility
+        base_url = utils.constants.OLLAMA_BASE_URL
+        if not base_url.endswith("/v1"):
+            base_url = base_url.rstrip("/") + "/v1"
+        
         return {
             "config_list": [
                 {
                     "model": utils.constants.OLLAMA_MODEL,
-                    "base_url": utils.constants.OLLAMA_BASE_URL,
-                    "api_key": "ollama",  # Ollama doesn't require real API key, but autogen needs something
+                    "base_url": base_url,
+                    "api_key": "ollama",  # Ollama doesn't require real API key, but OpenAI client needs something
                 }
             ],
             "cache_seed": None,
@@ -36,13 +41,13 @@ def get_llm_config():
         }
     
     elif backend == "groq":
-        # Groq configuration
+        # Groq configuration (OpenAI-compatible)
         return {
             "config_list": [
                 {
                     "model": utils.constants.GROQ_MODEL,
                     "api_key": utils.constants.GROQ_API_KEY,
-                    "api_type": "groq",
+                    "base_url": "https://api.groq.com/openai/v1",
                 }
             ],
             "cache_seed": None,

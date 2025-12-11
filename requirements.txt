@@ -1,11 +1,6 @@
-# LLM support - using litellm for flexible LLM backends
-litellm
-ollama
-
-# Legacy OpenAI support (optional)
+# LLM support - AutoGen 0.2.15 handles OpenAI-compatible APIs
+# OpenAI is optional - only needed if using OpenAI backend
 # openai
-# langchain-openai
-# tiktoken
 
 # PDF handling
 PyPDF2
