@@ -5,6 +5,9 @@ from dotenv import load_dotenv
 # Load the environment variables from the .env file
 load_dotenv()
 
+# Constants
+SEPARATOR_WIDTH = 70
+
 # Initialize the variables
 WEB_SERVER_PORT = os.getenv("WEB_SERVER_PORT")
 MAX_TOKENS = os.getenv("MAX_TOKENS")
@@ -68,9 +71,9 @@ def validate_required_config():
         errors.append(f"Unknown LLM_BACKEND: {LLM_BACKEND}. Supported: ollama, openai, groq")
 
     if errors:
-        print("\n" + "=" * 70)
+        print("\n" + "=" * SEPARATOR_WIDTH)
         print("  CONFIGURATION ERROR")
-        print("=" * 70)
+        print("=" * SEPARATOR_WIDTH)
         for error in errors:
             print(f"  ❌ {error}")
         print("\n  Please configure your .env file:")
@@ -81,7 +84,7 @@ def validate_required_config():
         print("     - Install Ollama from https://ollama.ai")
         print("     - Run: ollama pull llama2")
         print("     - Ensure Ollama is running (ollama serve)")
-        print("=" * 70 + "\n")
+        print("=" * SEPARATOR_WIDTH + "\n")
         sys.exit(1)
 
 

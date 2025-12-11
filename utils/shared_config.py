@@ -33,10 +33,14 @@ def get_llm_config():
         }
 
     elif backend == "openai":
-        # OpenAI configuration
+        # OpenAI configuration - using config_list for consistency
         return {
-            "model": utils.constants.OPENAI_MODEL_NAME,
-            "api_key": utils.constants.OPENAI_API_KEY,
+            "config_list": [
+                {
+                    "model": utils.constants.OPENAI_MODEL_NAME,
+                    "api_key": utils.constants.OPENAI_API_KEY,
+                }
+            ],
             "cache_seed": None,
         }
 
