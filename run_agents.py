@@ -4,6 +4,7 @@ import sys
 import autogen
 import autogen.runtime_logging
 
+from utils import constants
 from agents import text_agents, code_agents  # NOTE: caldera_agents removed
 from agents.text_agents import task_coordinator_agent
 from utils.logs import print_usage_statistics
@@ -12,6 +13,9 @@ import actions.agent_actions
 
 
 def init_agents():
+    # Validate configuration first
+    constants.validate_required_config()
+    
     # Disable logging User warnings - better for demos
     warnings.filterwarnings("ignore", category=UserWarning)
 
@@ -105,6 +109,8 @@ def display_menu():
     """Display an interactive menu for selecting scenarios."""
     print("\n" + "="*70)
     print(" CYBER SECURITY LLM AGENTS - Interactive Menu")
+    print("="*70)
+    print(" GitHub: https://github.com/devharshithb/cyber-security-llm-agents")
     print("="*70)
     
     # Group scenarios by category

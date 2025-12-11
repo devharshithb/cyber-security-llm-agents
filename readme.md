@@ -24,42 +24,84 @@ Released as part of our talks at RSAC2024:
 
 ### Step 1 - Install  requirements
 
-```
-pip install -r requirements
+```bash
+pip install -r requirements.txt
 ```
 
 ### Step 2 - Configure OpenAI API Information
 
-```
+```bash
 cp .env_template .env
 ```
-Then add your LLM API information and other parameters to the ``.env``.
+Then edit the `.env` file and add your OpenAI API key:
+
+```bash
+# Required - Edit these values
+OPENAI_API_KEY="sk-your-actual-api-key-here"
+OPENAI_MODEL_NAME="gpt-3.5-turbo-0125"  # or gpt-4, gpt-4-turbo, etc.
+
+# Optional - Only needed for Caldera integration
+CALDERA_SERVER="http://<caldera-hostname>:8888"
+CALDERA_API_KEY="<your-caldera-api-key>"
+
+# Optional - Only needed for HTTP/FTP servers
+WEB_SERVER_PORT=8800
+FTP_SERVER_ADDRESS="192.168.162.11:2100"
+FTP_SERVER_USER="user"
+FTP_SERVER_PASS="12345"
+```
 
 
-### Step 3 - Start HTTP and FTP server (Optional)
+### Step 3 - Run the Agents
+
+#### Interactive Mode (Recommended)
+
+Simply run without arguments to get an interactive menu:
+
+```bash
+python run_agents.py
+```
+
+This will display a categorized menu of all available scenarios that you can choose from.
+
+#### Command Line Mode
+
+Run a specific scenario directly:
+
+```bash
+python run_agents.py HELLO_AGENTS
+```
+
+Available scenarios include:
+- `HELLO_AGENTS` - Simple test scenario
+- `SUMMARIZE_RECENT_CISA_VULNS` - Fetch and summarize CISA KEV vulnerabilities
+- `EDR_DETECTION_CHAIN` - Full 5-agent EDR detection workflow
+- `RANSOMWARE_CHAIN` - Ransomware detection analysis
+- And many more (see interactive menu)
+
+
+### Step 4 - Start HTTP and FTP server (Optional)
 
 Only required if you want to host a simple HTTP and FTP server to interact with using your agents.
 This is useful for demos, where you might want to showcase exfiltration or downloading of payloads onto an implant.
 
-```
+```bash
 python run_servers.py
 ```
 
 
-### Step 3 - Hello, Agents
+## Quick Start Example
 
-Run a very basic scenario to confirm everything is configured correctly.
+After setup, test with:
 
-```
+```bash
 python run_agents.py HELLO_AGENTS
 ```
 
 The output should show the agent doing its best at being funny.
-If you see the below (or an even better) joke, you are all set!
+If you see a joke similar to below, you are all set!
 
 ```
-python run_agents.py HELLO_AGENTS
-
 ********************************************************************************
 Starting a new chat....
 
@@ -76,13 +118,61 @@ Why was the computer cold? It left its Windows open.
 TERMINATE
 ```
 
-## Building Scenarios
+## Usage
 
-All scenarios are defined in ``actions/agent_actions.py``. You can use that file to modify and create new scenarios. Once a new scenario has been added to the dictionary, you can run it:
+### Interactive Mode
 
+Run without arguments for a user-friendly menu:
+
+```bash
+python run_agents.py
 ```
+
+Select scenarios by number from categorized lists including:
+- Basic Tests
+- Core Detection Chains
+- MITRE ATT&CK Tactics
+- Network Security
+- Web Application Security
+- Cloud Security
+- Insider Threat & UEBA
+- DFIR & Investigation
+- Detection Engineering
+
+### Building Custom Scenarios
+
+All scenarios are defined in `actions/agent_actions.py`. You can use that file to modify and create new scenarios. Once a new scenario has been added to the dictionary, you can run it:
+
+```bash
 python run_agents.py <scenario-name>
 ```
+
+
+## Features
+
+### Multi-Agent Architecture
+
+The framework includes specialized agents:
+- **Text Analyst Agent** - Analyzes and summarizes text content
+- **Internet Agent** - Fetches and processes web content
+- **Command Execution Agent** - Executes shell commands
+- **Attacker Agent** - Simulates attacker perspectives for threat modeling
+- **Defender Agent** - Proposes defensive measures and detection rules
+- **Intel Analyst Agent** - Gathers and correlates threat intelligence
+- **Toolsmith Agent** - Creates security tools and scripts
+- **Decider Agent** - Makes strategic decisions in multi-step workflows
+
+### Available Scenario Categories
+
+1. **Basic Tests** - Quick validation and simple tasks
+2. **Core Detection Chains** - Full multi-agent detection workflows
+3. **MITRE ATT&CK Coverage** - Scenarios mapped to ATT&CK techniques
+4. **Network Security** - Network intrusion and C2 detection
+5. **Web Application Security** - Web attack detection and analysis
+6. **Cloud Security** - Cloud compromise and misconfiguration detection
+7. **Insider Threat** - UEBA and data leak detection
+8. **DFIR** - Digital forensics and incident response
+9. **Detection Engineering** - Sigma rules, KQL, and playbook generation
 
 
 ## Development

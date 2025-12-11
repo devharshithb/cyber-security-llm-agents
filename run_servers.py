@@ -1,4 +1,5 @@
 import sys
+from utils import constants
 from utils.ftp_server import server
 from utils.web_server import web_server_thread
 
@@ -7,8 +8,8 @@ if __name__ == "__main__":
     print(" CYBER SECURITY LLM AGENTS - Server Module")
     print("="*70)
     print("\nStarting servers...")
-    print("  - Web Server (HTTP)")
-    print("  - FTP Server")
+    print("  - Web Server (HTTP) on port:", constants.WEB_SERVER_PORT)
+    print("  - FTP Server on:", constants.FTP_SERVER_ADDRESS or "default")
     print("\n[INFO] Press Ctrl+C to stop all servers")
     print("="*70 + "\n")
     
@@ -28,4 +29,5 @@ if __name__ == "__main__":
         sys.exit(0)
     except Exception as e:
         print(f"\n[ERROR] Failed to start servers: {e}")
+        print("[HINT] Check your .env file for correct FTP and Web server configuration")
         sys.exit(1)

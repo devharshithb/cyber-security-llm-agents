@@ -1,4 +1,5 @@
 import os
+import sys
 from dotenv import load_dotenv
 
 # Load the environment variables from the .env file
@@ -24,3 +25,35 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 WEB_SERVER_PORT = int(WEB_SERVER_PORT) if WEB_SERVER_PORT else 8800
 MAX_TOKENS = int(MAX_TOKENS) if MAX_TOKENS else None
 MAX_TOKENS_PER_MESSAGE = int(MAX_TOKENS_PER_MESSAGE) if MAX_TOKENS_PER_MESSAGE else None
+
+
+def validate_required_config():
+    """Validate that required configuration is present."""
+    errors = []
+    
+    if not OPENAI_API_KEY or OPENAI_API_KEY.startswith("<"):
+        errors.append("OPENAI_API_KEY is not configured in .env file")
+    
+    if not OPENAI_MODEL_NAME or OPENAI_MODEL_NAME.startswith("<"):
+        errors.append("OPENAI_MODEL_NAME is not configured in .env file")
+    
+    if errors:
+        print("\n" + "="*70)
+        print("  CONFIGURATION ERROR")
+        print("="*70)
+        for error in errors:
+            print(f"  ❌ {error}")
+        print("\n  Please configure your .env file:")
+        print("  1. Copy .env_template to .env if not done already")
+        print("  2. Edit .env and add your OpenAI API key and model name")
+        print("="*70 + "\n")
+        sys.exit(1)
+
+
+def validate_caldera_config():
+    """Validate Caldera configuration (optional - only warn)."""
+    if not CALDERA_SERVER or CALDERA_SERVER.startswith("<"):
+        return False
+    if not CALDERA_API_KEY or CALDERA_API_KEY.startswith("<"):
+        return False
+    return True
