@@ -139,7 +139,19 @@ python run_servers.py
 
 ## Quick Start Example
 
-After setup, test with:
+After setup, verify your configuration:
+
+```bash
+python test_configuration.py
+```
+
+This will verify that:
+- All modules import correctly
+- Your LLM backend is configured properly
+- All agents can be retrieved
+- Configuration validation works
+
+Then test with a simple scenario:
 
 ```bash
 python run_agents.py HELLO_AGENTS
@@ -223,6 +235,20 @@ The framework includes specialized agents:
 
 
 ## Development
+
+### Testing
+
+Test your configuration:
+
+```bash
+python test_configuration.py
+```
+
+Verify all scenarios are defined correctly:
+
+```bash
+python verify_scenarios.py
+```
 
 ### Jupyter Notebooks
 
