@@ -16,6 +16,7 @@ pandas
 pyftpdlib 
 requests
 beautifulsoup4
+python-dotenv
 
 # Dev / notebook
 notebook
