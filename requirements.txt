@@ -1,0 +1,23 @@
+openai
+langchain-openai
+langchain-experimental
+tiktoken
+
+# PDF handling
+PyPDF2
+pypdf
+
+# Core engine (correct working version)
+pyautogen==0.2.15
+
+# Data processing
+pandas
+
+# Tools / utilities
+pyftpdlib 
+requests
+beautifulsoup4
+
+# Dev / notebook
+notebook
+flake8
