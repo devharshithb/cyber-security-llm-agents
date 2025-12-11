@@ -42,19 +42,19 @@ MAX_TOKENS_PER_MESSAGE = int(MAX_TOKENS_PER_MESSAGE) if MAX_TOKENS_PER_MESSAGE e
 def validate_required_config():
     """Validate that required configuration is present based on selected backend."""
     errors = []
-    
+
     if LLM_BACKEND == "openai":
         if not OPENAI_API_KEY or OPENAI_API_KEY.startswith("<") or OPENAI_API_KEY == "":
             errors.append("OPENAI_API_KEY is not configured in .env file (required for openai backend)")
         if not OPENAI_MODEL_NAME or OPENAI_MODEL_NAME.startswith("<"):
             errors.append("OPENAI_MODEL_NAME is not configured in .env file (required for openai backend)")
-    
+
     elif LLM_BACKEND == "groq":
         if not GROQ_API_KEY or GROQ_API_KEY.startswith("<") or GROQ_API_KEY == "":
             errors.append("GROQ_API_KEY is not configured in .env file (required for groq backend)")
         if not GROQ_MODEL or GROQ_MODEL.startswith("<"):
             errors.append("GROQ_MODEL is not configured in .env file (required for groq backend)")
-    
+
     elif LLM_BACKEND == "ollama":
         # Ollama doesn't require API keys, just check that the base URL is set
         if not OLLAMA_BASE_URL:
@@ -63,14 +63,14 @@ def validate_required_config():
             errors.append("OLLAMA_MODEL is not configured (defaults to llama2)")
         # Note: We don't validate if Ollama is actually running here
         # That will be checked when trying to connect
-    
+
     else:
         errors.append(f"Unknown LLM_BACKEND: {LLM_BACKEND}. Supported: ollama, openai, groq")
-    
+
     if errors:
-        print("\n" + "="*70)
+        print("\n" + "=" * 70)
         print("  CONFIGURATION ERROR")
-        print("="*70)
+        print("=" * 70)
         for error in errors:
             print(f"  ❌ {error}")
         print("\n  Please configure your .env file:")
@@ -81,7 +81,7 @@ def validate_required_config():
         print("     - Install Ollama from https://ollama.ai")
         print("     - Run: ollama pull llama2")
         print("     - Ensure Ollama is running (ollama serve)")
-        print("="*70 + "\n")
+        print("=" * 70 + "\n")
         sys.exit(1)
 
 

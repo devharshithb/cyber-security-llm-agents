@@ -13,14 +13,14 @@ def get_llm_config():
     Supports: ollama (local, free), openai (requires API key), groq (free tier with API key)
     """
     backend = utils.constants.LLM_BACKEND.lower()
-    
+
     if backend == "ollama":
         # Ollama configuration using OpenAI-compatible endpoint
         # Note: Ollama uses /v1 suffix for OpenAI compatibility
         base_url = utils.constants.OLLAMA_BASE_URL
         if not base_url.endswith("/v1"):
             base_url = base_url.rstrip("/") + "/v1"
-        
+
         return {
             "config_list": [
                 {
@@ -31,7 +31,7 @@ def get_llm_config():
             ],
             "cache_seed": None,
         }
-    
+
     elif backend == "openai":
         # OpenAI configuration
         return {
@@ -39,7 +39,7 @@ def get_llm_config():
             "api_key": utils.constants.OPENAI_API_KEY,
             "cache_seed": None,
         }
-    
+
     elif backend == "groq":
         # Groq configuration (OpenAI-compatible)
         return {
@@ -52,7 +52,7 @@ def get_llm_config():
             ],
             "cache_seed": None,
         }
-    
+
     else:
         raise ValueError(f"Unsupported LLM backend: {backend}")
 
