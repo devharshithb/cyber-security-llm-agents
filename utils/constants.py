@@ -59,13 +59,11 @@ def validate_required_config():
             errors.append("GROQ_MODEL is not configured in .env file (required for groq backend)")
 
     elif LLM_BACKEND == "ollama":
-        # Ollama doesn't require API keys, just check that the base URL is set
-        if not OLLAMA_BASE_URL:
-            errors.append("OLLAMA_BASE_URL is not configured (defaults to http://localhost:11434)")
-        if not OLLAMA_MODEL:
-            errors.append("OLLAMA_MODEL is not configured (defaults to llama2)")
+        # Ollama doesn't require API keys and has sensible defaults
+        # Just provide info message
         # Note: We don't validate if Ollama is actually running here
         # That will be checked when trying to connect
+        pass
 
     else:
         errors.append(f"Unknown LLM_BACKEND: {LLM_BACKEND}. Supported: ollama, openai, groq")

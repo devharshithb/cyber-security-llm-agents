@@ -61,7 +61,20 @@ def get_llm_config():
         raise ValueError(f"Unsupported LLM backend: {backend}")
 
 
-# Create llm_config based on selected backend
+# Lazy initialization of llm_config - will be created when first accessed
+_llm_config = None
+
+
+def get_config():
+    """Get the LLM configuration with lazy initialization."""
+    global _llm_config
+    if _llm_config is None:
+        _llm_config = get_llm_config()
+    return _llm_config
+
+
+# For backward compatibility, create llm_config as a module-level variable
+# This will be initialized on first import
 llm_config = get_llm_config()
 
 
