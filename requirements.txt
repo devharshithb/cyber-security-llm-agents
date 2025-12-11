@@ -1,7 +1,11 @@
-openai
-langchain-openai
-langchain-experimental
-tiktoken
+# LLM support - using litellm for flexible LLM backends
+litellm
+ollama
+
+# Legacy OpenAI support (optional)
+# openai
+# langchain-openai
+# tiktoken
 
 # PDF handling
 PyPDF2

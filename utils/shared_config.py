@@ -5,11 +5,55 @@ import os
 # Get path to the script folder
 script_folder = os.path.dirname(os.path.abspath(__file__))
 working_folder = os.path.join(script_folder, "../" + utils.constants.LLM_WORKING_FOLDER)
-llm_config = {
-    "model": utils.constants.OPENAI_MODEL_NAME,
-    "api_key": utils.constants.OPENAI_API_KEY,
-    "cache_seed": None,
-}
+
+
+def get_llm_config():
+    """
+    Get the LLM configuration based on the selected backend.
+    Supports: ollama (local, free), openai (requires API key), groq (free tier with API key)
+    """
+    backend = utils.constants.LLM_BACKEND.lower()
+    
+    if backend == "ollama":
+        # Ollama configuration using litellm
+        return {
+            "config_list": [
+                {
+                    "model": utils.constants.OLLAMA_MODEL,
+                    "base_url": utils.constants.OLLAMA_BASE_URL,
+                    "api_key": "ollama",  # Ollama doesn't require real API key, but autogen needs something
+                }
+            ],
+            "cache_seed": None,
+        }
+    
+    elif backend == "openai":
+        # OpenAI configuration
+        return {
+            "model": utils.constants.OPENAI_MODEL_NAME,
+            "api_key": utils.constants.OPENAI_API_KEY,
+            "cache_seed": None,
+        }
+    
+    elif backend == "groq":
+        # Groq configuration
+        return {
+            "config_list": [
+                {
+                    "model": utils.constants.GROQ_MODEL,
+                    "api_key": utils.constants.GROQ_API_KEY,
+                    "api_type": "groq",
+                }
+            ],
+            "cache_seed": None,
+        }
+    
+    else:
+        raise ValueError(f"Unsupported LLM backend: {backend}")
+
+
+# Create llm_config based on selected backend
+llm_config = get_llm_config()
 
 
 def clean_working_directory(agent_subfolder: str):
